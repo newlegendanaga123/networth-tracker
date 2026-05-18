@@ -27,3 +27,8 @@ render();
 
 // Auto-fetch fresh prices on load
 refreshAll();
+
+// Select-all on focus for number inputs in add forms — prevents "020" appending on mobile tap
+document.querySelectorAll('input[type="number"]').forEach(el => {
+  el.addEventListener('focus', () => el.select());
+});

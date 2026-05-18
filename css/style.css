@@ -209,9 +209,26 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   #t-prop th:nth-child(5), #t-prop td:nth-child(5),
   #t-prop th:nth-child(6), #t-prop td:nth-child(6) { display: none; }
 
-  /* Table sizing */
+  /* Table sizing + remove inline fixed widths so hidden cols don't ghost-scroll */
+  th { padding: 7px 10px; width: auto !important; min-width: 0; }
   td { padding: 8px 10px; font-size: 13px; }
-  th { padding: 7px 10px; }
+
+  /* Ensure hidden cells take truly zero space */
+  #t-stocks th:nth-child(n+6):nth-child(-n+12),
+  #t-stocks td:nth-child(n+6):nth-child(-n+12),
+  #t-crypto th:nth-child(4), #t-crypto td:nth-child(4),
+  #t-bank  th:nth-child(4),  #t-bank  td:nth-child(4),
+  #t-bank  th:nth-child(6),  #t-bank  td:nth-child(6),
+  #t-gold  th:nth-child(n+5):nth-child(-n+8),
+  #t-gold  td:nth-child(n+5):nth-child(-n+8),
+  #t-prop  th:nth-child(2),  #t-prop  td:nth-child(2),
+  #t-prop  th:nth-child(3),  #t-prop  td:nth-child(3),
+  #t-prop  th:nth-child(5),  #t-prop  td:nth-child(5),
+  #t-prop  th:nth-child(6),  #t-prop  td:nth-child(6) {
+    display: none;
+    width: 0 !important;
+    padding: 0 !important;
+  }
 
   /* Add forms — stack vertically, full-width inputs */
   .add-form { flex-direction: column; align-items: stretch; gap: 6px; }
