@@ -184,47 +184,60 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
   .summary { grid-template-columns: 1fr 1fr; }
   .card-value { font-size: 19px; }
 
-  /* Tables — aggressive column hiding so tables fit without horizontal scroll.
-     Strategy: 3-4 cols per table max. Hidden cols get display:none + zero width/padding. */
+  /* Tables — fixed layout so column widths are respected, no ghost scroll.
+     Each table: 3-4 visible cols. Fixed px on label/count cols; value col fills remainder. */
+  th { padding: 7px 8px; }
+  td { padding: 8px 8px; font-size: 13px; }
 
-  th { padding: 7px 10px; width: auto !important; }
-  td { padding: 8px 10px; font-size: 13px; }
+  #t-stocks, #t-crypto, #t-bank, #t-gold, #t-prop {
+    table-layout: fixed;
+    width: 100%;
+  }
 
-  /* Stocks: keep Ticker(1) Lots(3) Value(5) ✕(13)
-     hide Mkt(2) Price(4) Yield–ExpDiv(6-12) */
+  /* Stocks: Ticker(1) | Lots(3) | Value(5) | ✕(13) */
+  #t-stocks th:nth-child(1), #t-stocks td:nth-child(1) { width: 62px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #t-stocks th:nth-child(3), #t-stocks td:nth-child(3) { width: 50px; }
+  #t-stocks th:last-child,   #t-stocks td:last-child   { width: 34px; padding: 0; }
   #t-stocks th:nth-child(2),  #t-stocks td:nth-child(2),
   #t-stocks th:nth-child(4),  #t-stocks td:nth-child(4),
   #t-stocks th:nth-child(n+6):nth-child(-n+12),
   #t-stocks td:nth-child(n+6):nth-child(-n+12)
-  { display:none; width:0!important; padding:0!important; }
+  { display: none !important; width: 0 !important; padding: 0 !important; }
 
-  /* Crypto: keep Coin(1) Amount(2) Value(5) ✕(6)
-     hide Price(3) 24h(4) */
+  /* Crypto: Name(1) | Amount(2) | Value(5) | ✕(6) */
+  #t-crypto th:nth-child(1), #t-crypto td:nth-child(1) { width: 82px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #t-crypto th:nth-child(2), #t-crypto td:nth-child(2) { width: 76px; }
+  #t-crypto th:last-child,   #t-crypto td:last-child   { width: 34px; padding: 0; }
   #t-crypto th:nth-child(3), #t-crypto td:nth-child(3),
   #t-crypto th:nth-child(4), #t-crypto td:nth-child(4)
-  { display:none; width:0!important; padding:0!important; }
+  { display: none !important; width: 0 !important; padding: 0 !important; }
 
-  /* Bank: keep Name(1) Amount(3) Value(5) ✕(7)
-     hide Currency(2) Rate(4) 24h(6) */
+  /* Bank: Name(1) | Amount(3) | Value(5) | ✕(7) */
+  #t-bank th:nth-child(1), #t-bank td:nth-child(1) { width: 82px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #t-bank th:nth-child(3), #t-bank td:nth-child(3) { width: 80px; }
+  #t-bank th:last-child,   #t-bank td:last-child   { width: 34px; padding: 0; }
   #t-bank th:nth-child(2), #t-bank td:nth-child(2),
   #t-bank th:nth-child(4), #t-bank td:nth-child(4),
   #t-bank th:nth-child(6), #t-bank td:nth-child(6)
-  { display:none; width:0!important; padding:0!important; }
+  { display: none !important; width: 0 !important; padding: 0 !important; }
 
-  /* Gold: keep Name(1) Grams(2) Value(4) ✕(9)
-     hide Price/g(3) 24h–1y(5-8) */
+  /* Gold: Name(1) | Grams(2) | Value(4) | ✕(9) */
+  #t-gold th:nth-child(1), #t-gold td:nth-child(1) { width: 82px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #t-gold th:nth-child(2), #t-gold td:nth-child(2) { width: 58px; }
+  #t-gold th:last-child,   #t-gold td:last-child   { width: 34px; padding: 0; }
   #t-gold th:nth-child(3), #t-gold td:nth-child(3),
   #t-gold th:nth-child(n+5):nth-child(-n+8),
   #t-gold td:nth-child(n+5):nth-child(-n+8)
-  { display:none; width:0!important; padding:0!important; }
+  { display: none !important; width: 0 !important; padding: 0 !important; }
 
-  /* Property: keep Name(1) Value(4) ✕(7)
-     hide Location(2) Status(3) Rent(5) Snapshot(6) */
+  /* Property: Name(1) | Value(4) | ✕(7) */
+  #t-prop th:nth-child(4), #t-prop td:nth-child(4) { width: 100px; }
+  #t-prop th:last-child,   #t-prop td:last-child   { width: 34px; padding: 0; }
   #t-prop th:nth-child(2), #t-prop td:nth-child(2),
   #t-prop th:nth-child(3), #t-prop td:nth-child(3),
   #t-prop th:nth-child(5), #t-prop td:nth-child(5),
   #t-prop th:nth-child(6), #t-prop td:nth-child(6)
-  { display:none; width:0!important; padding:0!important; }
+  { display: none !important; width: 0 !important; padding: 0 !important; }
 
   /* Add forms — stack vertically, full-width inputs */
   .add-form { flex-direction: column; align-items: stretch; gap: 6px; }
