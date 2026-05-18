@@ -117,7 +117,7 @@ function renderStocks() {
     return `<tr>
       <td class="ticker">${s.ticker.replace('.JK', '')}</td>
       <td><span class="mkt-badge ${mktClass}">${s.market === 'US' ? 'US' : 'IDX'}</span>${sectorBadge}</td>
-      <td class="mono"><span onclick="startEditLot(${i},this)" style="cursor:pointer;border-bottom:1px dashed #ffffff30">${s.market === 'US' ? +s.lots.toFixed(4) : s.lots}</span></td>
+      <td class="mono"><span onclick="startEditLot(${i},this)" class="editable">${s.market === 'US' ? +s.lots.toFixed(4) : s.lots}</span></td>
       <td class="mono right">${priceDisplay}</td>
       <td class="mono right">${val ? fmtShort(val) : '—'}</td>
       <td class="mono right amber">${yieldDisplay}</td>
@@ -157,8 +157,8 @@ function renderCrypto() {
     const chStr = ch != null
       ? `<span class="${ch >= 0 ? 'change-pos' : 'change-neg'}">${ch >= 0 ? '+' : ''}${ch.toFixed(2)}%</span>` : '—';
     return `<tr>
-      <td>${c.coinName}</td>
-      <td class="mono right">${c.amount.toLocaleString('en-US', { maximumFractionDigits: 8 })}</td>
+      <td><span onclick="startEditCryptoName(${i},this)" class="editable">${c.coinName}</span></td>
+      <td class="mono right"><span onclick="startEditCryptoAmount(${i},this)" class="editable">${c.amount.toLocaleString('en-US', { maximumFractionDigits: 8 })}</span></td>
       <td class="mono right">${c.price ? fmtB(c.price) : `<span class="price-loading">${t('status.loading')}</span>`}</td>
       <td class="mono right">${chStr}</td>
       <td class="mono right">${val ? fmtShort(val) : '—'}</td>
@@ -212,9 +212,9 @@ function renderBanks() {
       rateDisplay = sym + ratio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: dec }) + '/' + b.currency;
     }
     return `<tr>
-      <td>${b.name}</td>
+      <td><span onclick="startEditBankName(${i},this)" class="editable">${b.name}</span></td>
       <td><span class="badge badge-green">${b.currency}</span></td>
-      <td class="mono right">${fmtNative}</td>
+      <td class="mono right"><span onclick="startEditBankAmount(${i},this)" class="editable">${fmtNative}</span></td>
       <td class="mono right">${rateDisplay}</td>
       <td class="mono right">${val ? fmtShort(val) : '—'}</td>
       <td class="mono right">${pctCell(b.change24h)}</td>
@@ -240,8 +240,8 @@ function renderGolds() {
     total += val;
     const ch = g.change || (goldData ? goldData.change : {});
     return `<tr>
-      <td>${g.name}</td>
-      <td class="mono right">${g.grams}g</td>
+      <td><span onclick="startEditGoldName(${i},this)" class="editable">${g.name}</span></td>
+      <td class="mono right"><span onclick="startEditGoldGrams(${i},this)" class="editable">${g.grams}g</span></td>
       <td class="mono right">${ppg ? fmtShort(ppg) + '/g' : `<span style="color:#9ca3af">${t('status.fetching')}</span>`}</td>
       <td class="mono right">${val ? fmtShort(val) : '—'}</td>
       <td class="mono right">${pctCell(ch && ch.h24)}</td>
@@ -260,7 +260,7 @@ function renderProperties() {
   const tb = document.getElementById('property-tbody');
   let total = 0;
   if (!(state.properties || []).length) {
-    tb.innerHTML = `<tr><td colspan="8" class="empty">${t('empty.property')}</td></tr>`;
+    tb.innerHTML = `<tr><td colspan="7" class="empty">${t('empty.property')}</td></tr>`;
     document.getElementById('property-total').textContent = fmtShort(0);
     return;
   }
@@ -278,20 +278,19 @@ function renderProperties() {
       ? pctCell(vsSnap) + ` <span style="font-size:10px;color:#9ca3af">vs ${prevSnap.date}</span>`
       : '<span style="color:#9ca3af">—</span>';
     return `<tr>
-      <td>${p.name}</td>
+      <td><span onclick="startEditPropName(${i},this)" class="editable">${p.name}</span></td>
       <td style="color:#9ca3af;font-size:13px">${p.location || '—'}</td>
       <td><span class="badge ${statusBadge[p.status] || 'badge-gray'}">${statusLabel[p.status] || p.status}</span></td>
-      <td class="mono right">${fmtShort(p.value)}</td>
+      <td class="mono right"><span onclick="startEditPropValue(${i},this)" class="editable">${fmtShort(p.value)}</span></td>
       <td class="mono right">${p.rent ? fmtShort(p.rent) + '<span style="font-size:10px;color:#9ca3af">/bln</span>' : '—'}</td>
       <td class="mono right">${vsSnapCell}</td>
-      <td class="right"><button class="btn-sm" onclick="updatePropertyValue(${i})" style="color:var(--accent2);border-color:#22d3ee28">✎</button></td>
       <td class="right"><button class="btn-sm" onclick="removeProperty(${i})">✕</button></td>
     </tr>`;
   }).join('') + (totalRent ? `
     <tr style="border-top:1px solid var(--border);background:var(--surface2)">
       <td colspan="4" style="font-size:12px;color:var(--muted);font-family:var(--mono);padding:8px 12px">${t('rent.est')}</td>
       <td class="mono right" style="color:var(--accent);padding:8px 12px">${fmtShort(totalRent)}<span style="color:var(--muted);font-size:10px">${t('div.perMonth')}</span></td>
-      <td colspan="3"></td>
+      <td colspan="2"></td>
     </tr>` : '');
   document.getElementById('property-total').textContent = fmtShort(total);
 }

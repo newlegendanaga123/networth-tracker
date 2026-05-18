@@ -77,6 +77,30 @@ function startEditLot(i, el) {
 function setExpDiv(i, val)   { state.stocks[i].expDivPerShare = parseFloat(val) || null; save(); render(); }
 function setBuyPrice(i, val) { state.stocks[i].buyPrice       = parseFloat(val) || null; save(); render(); }
 
+// ── Generic inline editors ────────────────────────────────────────────────────
+
+function _inlineNum(el, cur, isFloat, onCommit) {
+  const input = document.createElement('input');
+  input.type = 'number'; input.step = isFloat ? 'any' : '1'; input.min = '0';
+  input.value = cur; input.className = 'lot-edit';
+  el.replaceWith(input); input.focus(); input.select();
+  function commit() {
+    const v = isFloat ? (parseFloat(input.value) || cur) : (parseInt(input.value) || cur);
+    onCommit(v);
+  }
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') render(); });
+}
+
+function _inlineText(el, cur, onCommit) {
+  const input = document.createElement('input');
+  input.type = 'text'; input.value = cur; input.className = 'lot-edit'; input.style.minWidth = '80px';
+  el.replaceWith(input); input.focus(); input.select();
+  function commit() { const v = input.value.trim() || cur; onCommit(v); }
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') render(); });
+}
+
 // ── Crypto ────────────────────────────────────────────────────────────────────
 
 function addCrypto() {
@@ -105,6 +129,13 @@ function addCrypto() {
 
 function removeCrypto(i) { state.crypto.splice(i, 1); save(); render(); }
 
+function startEditCryptoAmount(i, el) {
+  _inlineNum(el, state.crypto[i].amount, true, v => { state.crypto[i].amount = v; save(); render(); });
+}
+function startEditCryptoName(i, el) {
+  _inlineText(el, state.crypto[i].coinName, v => { state.crypto[i].coinName = v; save(); render(); });
+}
+
 // ── Banks ─────────────────────────────────────────────────────────────────────
 
 function addBank() {
@@ -121,6 +152,13 @@ function addBank() {
 }
 
 function removeBank(i) { state.banks.splice(i, 1); save(); render(); }
+
+function startEditBankAmount(i, el) {
+  _inlineNum(el, state.banks[i].amount, true, v => { state.banks[i].amount = v; save(); render(); });
+}
+function startEditBankName(i, el) {
+  _inlineText(el, state.banks[i].name, v => { state.banks[i].name = v; save(); render(); });
+}
 
 // ── Gold ──────────────────────────────────────────────────────────────────────
 
@@ -139,6 +177,13 @@ function addGold() {
 }
 
 function removeGold(i) { state.golds.splice(i, 1); save(); render(); }
+
+function startEditGoldGrams(i, el) {
+  _inlineNum(el, state.golds[i].grams, true, v => { state.golds[i].grams = v; save(); render(); });
+}
+function startEditGoldName(i, el) {
+  _inlineText(el, state.golds[i].name, v => { state.golds[i].name = v; save(); render(); });
+}
 
 // ── Properties ────────────────────────────────────────────────────────────────
 
@@ -160,13 +205,18 @@ function addProperty() {
 
 function removeProperty(i) { state.properties.splice(i, 1); save(); render(); }
 
-function updatePropertyValue(i) {
-  const newVal = parseFloat(prompt('Nilai properti baru (Rp):', state.properties[i].value));
-  if (!newVal || isNaN(newVal)) return;
-  state.properties[i].value = newVal;
-  const now = new Date().toISOString().split('T')[0];
-  state.properties[i].snapshots.push({ date: now, value: newVal });
-  save(); render();
+function startEditPropValue(i, el) {
+  _inlineNum(el, state.properties[i].value, true, v => {
+    state.properties[i].value = v;
+    const now  = new Date().toISOString().split('T')[0];
+    const snaps = state.properties[i].snapshots = state.properties[i].snapshots || [];
+    const last  = snaps[snaps.length - 1];
+    if (!last || last.value !== v) snaps.push({ date: now, value: v });
+    save(); render();
+  });
+}
+function startEditPropName(i, el) {
+  _inlineText(el, state.properties[i].name, v => { state.properties[i].name = v; save(); render(); });
 }
 
 // legacy stub

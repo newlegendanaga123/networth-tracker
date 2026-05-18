@@ -86,9 +86,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 
 .empty{padding:16px;text-align:center;color:var(--muted);font-size:13px;font-family:var(--mono)}
 .error-msg{font-size:11px;color:var(--danger);padding:7px 18px;font-family:var(--mono);border-top:1px solid #f8717118;background:#f8717108}
-.lot-edit{width:52px;padding:3px 6px;font-size:14px;font-family:var(--mono);background:var(--surface2);border:1px solid var(--accent2);border-radius:5px;color:var(--text);text-align:center}
+.lot-edit{width:80px;padding:3px 6px;font-size:13px;font-family:var(--mono);background:var(--surface2);border:1px solid var(--accent2);border-radius:5px;color:var(--text);text-align:center}
 .exp-div-input{width:82px;padding:3px 6px;font-size:12px;font-family:var(--mono);background:var(--surface2);border:1px solid #ffffff18;border-radius:5px;color:var(--text);text-align:right}
 .exp-div-input:focus,.lot-edit:focus{outline:none;border-color:var(--accent2)}
+.editable{cursor:pointer;border-bottom:1px dashed #ffffff28;transition:border-color .15s}
+.editable:hover{border-bottom-color:#ffffff60}
 .mkt-badge{font-size:10px;font-family:var(--mono);padding:2px 6px;border-radius:4px;font-weight:500}
 .mkt-idx{background:#22d3ee18;color:var(--accent2);border:1px solid #22d3ee28}
 .mkt-us{background:#f59e0b18;color:var(--accent3);border:1px solid #f59e0b28}
