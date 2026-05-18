@@ -176,7 +176,7 @@ async function refreshAll() {
         goldData = d;
         (state.golds || []).forEach((g, i) => {
           state.golds[i].pricePerGram = d.pricePerGram;
-          state.golds[i].change       = d.change24h;
+          state.golds[i].change       = d.change || null;
         });
         const el = document.getElementById('gold-price-display');
         if (el) el.textContent = 'XAU: ' + fmtB(d.pricePerGram) + '/gram';

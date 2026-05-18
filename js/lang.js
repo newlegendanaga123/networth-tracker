@@ -61,7 +61,6 @@ const LANGS = {
     'col.status':      'Status',
     'col.rent':        'Rent/mo',
     'col.vsSnapshot':  'vs Snapshot',
-    'col.update':      'Update',
     'col.coin':        'Coin',
 
     // Buttons
@@ -244,7 +243,6 @@ const LANGS = {
     'col.status':      'Status',
     'col.rent':        'Sewa/bln',
     'col.vsSnapshot':  'vs Snapshot',
-    'col.update':      'Update',
     'col.coin':        'Koin',
 
     // Buttons

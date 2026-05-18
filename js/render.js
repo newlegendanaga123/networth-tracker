@@ -1,5 +1,15 @@
 'use strict';
 
+// ── HTML escape (prevent self-XSS from user-entered names) ───────────────────
+function esc(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // ── Totals ────────────────────────────────────────────────────────────────────
 
 function getTotals() {
@@ -157,7 +167,7 @@ function renderCrypto() {
     const chStr = ch != null
       ? `<span class="${ch >= 0 ? 'change-pos' : 'change-neg'}">${ch >= 0 ? '+' : ''}${ch.toFixed(2)}%</span>` : '—';
     return `<tr>
-      <td><span onclick="startEditCryptoName(${i},this)" class="editable">${c.coinName}</span></td>
+      <td><span onclick="startEditCryptoName(${i},this)" class="editable">${esc(c.coinName)}</span></td>
       <td class="mono right"><span onclick="startEditCryptoAmount(${i},this)" class="editable">${c.amount.toLocaleString('en-US', { maximumFractionDigits: 8 })}</span></td>
       <td class="mono right">${c.price ? fmtB(c.price) : `<span class="price-loading">${t('status.loading')}</span>`}</td>
       <td class="mono right">${chStr}</td>
@@ -212,7 +222,7 @@ function renderBanks() {
       rateDisplay = sym + ratio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: dec }) + '/' + b.currency;
     }
     return `<tr>
-      <td><span onclick="startEditBankName(${i},this)" class="editable">${b.name}</span></td>
+      <td><span onclick="startEditBankName(${i},this)" class="editable">${esc(b.name)}</span></td>
       <td><span class="badge badge-green">${b.currency}</span></td>
       <td class="mono right"><span onclick="startEditBankAmount(${i},this)" class="editable">${fmtNative}</span></td>
       <td class="mono right">${rateDisplay}</td>
@@ -235,12 +245,12 @@ function renderGolds() {
     return;
   }
   tb.innerHTML = state.golds.map((g, i) => {
-    const ppg = g.pricePerGram || (goldData ? goldData.pricePerGramIDR : null);
+    const ppg = g.pricePerGram || (goldData ? goldData.pricePerGram : null);
     const val = ppg ? g.grams * ppg : 0;
     total += val;
     const ch = g.change || (goldData ? goldData.change : {});
     return `<tr>
-      <td><span onclick="startEditGoldName(${i},this)" class="editable">${g.name}</span></td>
+      <td><span onclick="startEditGoldName(${i},this)" class="editable">${esc(g.name)}</span></td>
       <td class="mono right"><span onclick="startEditGoldGrams(${i},this)" class="editable">${g.grams}g</span></td>
       <td class="mono right">${ppg ? fmtShort(ppg) + '/g' : `<span style="color:#9ca3af">${t('status.fetching')}</span>`}</td>
       <td class="mono right">${val ? fmtShort(val) : '—'}</td>
@@ -278,8 +288,8 @@ function renderProperties() {
       ? pctCell(vsSnap) + ` <span style="font-size:10px;color:#9ca3af">vs ${prevSnap.date}</span>`
       : '<span style="color:#9ca3af">—</span>';
     return `<tr>
-      <td><span onclick="startEditPropName(${i},this)" class="editable">${p.name}</span></td>
-      <td style="color:#9ca3af;font-size:13px">${p.location || '—'}</td>
+      <td><span onclick="startEditPropName(${i},this)" class="editable">${esc(p.name)}</span></td>
+      <td style="color:#9ca3af;font-size:13px">${esc(p.location) || '—'}</td>
       <td><span class="badge ${statusBadge[p.status] || 'badge-gray'}">${statusLabel[p.status] || p.status}</span></td>
       <td class="mono right"><span onclick="startEditPropValue(${i},this)" class="editable">${fmtShort(p.value)}</span></td>
       <td class="mono right">${p.rent ? fmtShort(p.rent) + '<span style="font-size:10px;color:#9ca3af">/bln</span>' : '—'}</td>

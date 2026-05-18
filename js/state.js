@@ -38,5 +38,7 @@ let fxData   = null;  // cached FX response from /fx
 function save() {
   try {
     localStorage.setItem('nw-state-id', JSON.stringify(state));
-  } catch (e) {}
+  } catch (e) {
+    console.warn('Save failed (localStorage full or blocked):', e);
+  }
 }
